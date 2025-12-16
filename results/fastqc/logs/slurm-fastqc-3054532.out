@@ -1,0 +1,23 @@
+# Starting script fastqc.sh
+Mon Dec 15 04:05:49 PM EST 2025
+# Input FASTQ file:   raw_data_12_11_2025/612A0_S41_L001_R2_001.fastq.gz
+# Output dir:         results/fastqc
+
+application/gzip
+Started analysis of 612A0_S41_L001_R2_001.fastq.gz
+Approx 10% complete for 612A0_S41_L001_R2_001.fastq.gz
+Approx 20% complete for 612A0_S41_L001_R2_001.fastq.gz
+Approx 30% complete for 612A0_S41_L001_R2_001.fastq.gz
+Approx 40% complete for 612A0_S41_L001_R2_001.fastq.gz
+Approx 50% complete for 612A0_S41_L001_R2_001.fastq.gz
+Approx 60% complete for 612A0_S41_L001_R2_001.fastq.gz
+Approx 70% complete for 612A0_S41_L001_R2_001.fastq.gz
+Approx 80% complete for 612A0_S41_L001_R2_001.fastq.gz
+Approx 90% complete for 612A0_S41_L001_R2_001.fastq.gz
+Analysis complete for 612A0_S41_L001_R2_001.fastq.gz
+
+# Used FastQC version:
+FastQC v0.12.1
+
+# Successfully finished script fastqc.sh
+Mon Dec 15 04:05:51 PM EST 2025

@@ -1,0 +1,25 @@
+# Starting script multiqc.sh
+Fri Dec  5 11:45:28 AM EST 2025
+# Input dir:                      results/fastqc_cutadapt
+# Output file:                    results/multiqc_cutadapt
+
+INFO:    Using cached SIF image
+INFO:    gocryptfs not found, will not be able to use gocryptfs
+
+/// MultiQC 🔍 v1.31
+
+     version_check | MultiQC Version v1.32 now available!
+       file_search | Search path: /fs/ess/PAS0471/menuka/Jillian/results/fastqc_cutadapt
+
+            fastqc | Found 8 reports
+
+     write_results | Data        : results/multiqc_cutadapt/multiqc_data
+     write_results | Report      : results/multiqc_cutadapt/multiqc_report.html
+           multiqc | MultiQC complete
+
+# Used MultiQC version:
+INFO:    Using cached SIF image
+INFO:    gocryptfs not found, will not be able to use gocryptfs
+multiqc, version 1.31
+# Successfully finished script multiqc.sh
+Fri Dec  5 11:45:38 AM EST 2025

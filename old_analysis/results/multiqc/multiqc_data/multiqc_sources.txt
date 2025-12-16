@@ -1,0 +1,9 @@
+Module	Section	Sample Name	Source
+FastQC	all_sections	504A0_S1_L001_R1_001	/fs/ess/PAS0471/menuka/Jillian/results/fastqc/504A0_S1_L001_R1_001_fastqc.zip
+FastQC	all_sections	504A0_S1_L001_R2_001	/fs/ess/PAS0471/menuka/Jillian/results/fastqc/504A0_S1_L001_R2_001_fastqc.zip
+FastQC	all_sections	504A14_S2_L001_R1_001	/fs/ess/PAS0471/menuka/Jillian/results/fastqc/504A14_S2_L001_R1_001_fastqc.zip
+FastQC	all_sections	504A14_S2_L001_R2_001	/fs/ess/PAS0471/menuka/Jillian/results/fastqc/504A14_S2_L001_R2_001_fastqc.zip
+FastQC	all_sections	504B0_S3_L001_R1_001	/fs/ess/PAS0471/menuka/Jillian/results/fastqc/504B0_S3_L001_R1_001_fastqc.zip
+FastQC	all_sections	504B0_S3_L001_R2_001	/fs/ess/PAS0471/menuka/Jillian/results/fastqc/504B0_S3_L001_R2_001_fastqc.zip
+FastQC	all_sections	504B14_S4_L001_R1_001	/fs/ess/PAS0471/menuka/Jillian/results/fastqc/504B14_S4_L001_R1_001_fastqc.zip
+FastQC	all_sections	504B14_S4_L001_R2_001	/fs/ess/PAS0471/menuka/Jillian/results/fastqc/504B14_S4_L001_R2_001_fastqc.zip

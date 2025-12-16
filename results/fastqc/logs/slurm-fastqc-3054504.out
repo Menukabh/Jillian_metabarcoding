@@ -1,0 +1,19 @@
+# Starting script fastqc.sh
+Mon Dec 15 04:05:49 PM EST 2025
+# Input FASTQ file:   raw_data_12_11_2025/597B0_S123_L001_R2_001.fastq.gz
+# Output dir:         results/fastqc
+
+application/gzip
+Started analysis of 597B0_S123_L001_R2_001.fastq.gz
+Approx 15% complete for 597B0_S123_L001_R2_001.fastq.gz
+Approx 35% complete for 597B0_S123_L001_R2_001.fastq.gz
+Approx 55% complete for 597B0_S123_L001_R2_001.fastq.gz
+Approx 70% complete for 597B0_S123_L001_R2_001.fastq.gz
+Approx 90% complete for 597B0_S123_L001_R2_001.fastq.gz
+Analysis complete for 597B0_S123_L001_R2_001.fastq.gz
+
+# Used FastQC version:
+FastQC v0.12.1
+
+# Successfully finished script fastqc.sh
+Mon Dec 15 04:05:52 PM EST 2025

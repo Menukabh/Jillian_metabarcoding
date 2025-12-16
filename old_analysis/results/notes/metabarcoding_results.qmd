@@ -1,0 +1,206 @@
+---
+title: "Metabarcoding_analysis"
+author: "Menuka Bhandari"
+format: html
+self-contained: true
+editor_options: 
+  chunk_output_type: console
+---
+
+# Setup
+
+Concept of reverse complement- explain it by using example
+Forward strand:  5′- ATGCCA -3′
+Reverse strand:  3′- TACGGT -5′
+```{r}
+a <- "ATGCCA"
+dna <-DNAString(a)
+dna
+reverse(dna)
+reverseComplement(dna)
+```
+
+## Load all the packages needed for analysis
+```{r}
+# Load packages
+library(dada2)
+library(phyloseq)
+library(tidyverse)
+```
+
+## Read all files
+```{r}
+# Save the number of cores in a variable
+n_cores <- 24
+
+# Dir with input FASTQ files (post-cutadapt trimmed reads):
+indir <- "results/cutadapt"
+
+# FASTA file with training data - a database your sequences will be compared to (SILVA, UNITE, etc):
+# (Check for an up-to-date version at <https://benjjneb.github.io/dada2/training.html>)
+tax_key <- "data/ref/silva_nr99_v138.1_train_set.fa.gz"  
+```
+
+## Define output directories
+```{r}
+# Define the output dirs
+outdir <- "results/dada"                     
+filter_dir <- "results/dada/filtered_fastq"
+
+# Create directories if they are not already created:
+dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
+dir.create(filter_dir, showWarnings = FALSE, recursive = TRUE)
+
+# Create vectors with FASTQ file names
+fastqs_raw_F <- sort(list.files(indir, pattern = "_R1_001.fastq.gz", full.names = TRUE))
+fastqs_raw_R <- sort(list.files(indir, pattern = "_R2_001.fastq.gz", full.names = TRUE))
+```
+
+# Filtering (remove poor quality reads) and quality trimming (poor quality bases)
+- truncLen : Truncate reads after truncLen bases and discard reads shorter than this
+- trimLeft : trim the first 10 nucleotides of each read 
+- maxEE : trim reads based on the maximum numbers of Expected Errors (EE) given the quality scores of the reads’ bases
+trunQ - trim read after quality bases 2 or less than 2
+
+```{r eval= FALSE}
+fastqs_filt_F <- file.path(filter_dir, fastqs_raw_F)
+fastqs_filt_R <- file.path(filter_dir, fastqs_raw_R)
+
+# Filter the FASTQ files
+filter_results <-
+  filterAndTrim(fastqs_raw_F, fastqs_filt_F,
+                fastqs_raw_R, fastqs_filt_R,
+                truncLen = c(250,210),
+                trimLeft = 10,
+                maxN = 0,
+                maxEE = c(2,2),
+                truncQ = 2,
+                rm.phix = FALSE,
+                multithread = n_cores,
+                compress = FALSE, verbose = TRUE) 
+
+```
+
+# Dereplication and error training 
+Dereplication : condense the data by collapsing together all reads that encode the same sequence. Learn error : learns error from each sample.
+```{r}
+# Dereplicate the FASTQ files
+fastqs_derep_F <- derepFastq(fastqs_filt_F, verbose = FALSE)
+fastqs_derep_R <- derepFastq(fastqs_filt_R, verbose = FALSE)
+# Error training
+err_F <- learnErrors(fastqs_derep_F, multithread = n_cores, verbose = TRUE)
+err_R <- learnErrors(fastqs_derep_R, multithread = n_cores, verbose = TRUE)
+# Plot the error profiles
+plotErrors(err_F, nominalQ = TRUE)
+plotErrors(err_R, nominalQ = TRUE)
+```
+
+# Infer ASVs 
+Infer ASVs from unique sequences. Explore pool options to see the different available options.
+```{r}
+# Infer ASVs
+dada_Fs <- dada(fastqs_derep_F, err = err_F, pool = FALSE, multithread = n_cores)
+dada_Rs <- dada(fastqs_derep_R, err = err_R, pool = FALSE, multithread = n_cores)
+dada_Fs[[1]]
+```
+
+# Merge read pairs :  merge the forward and reverse reads together to obtain the 
+full denoised sequences. If the forward and reverse reads overlap by at least 
+**12 bases**, merging will happen by default.
+
+```{r}
+# Merge forward and reverse reads
+mergers <- mergePairs(dada_Fs, fastqs_derep_F,
+                      dada_Rs, fastqs_derep_R,
+                      verbose = TRUE)
+```
+
+
+# Remove chimera
+```{r}
+# Save the dereplicated objects
+saveRDS(fastqs_derep_F, file = file.path(outdir, "fastqs_derep_F.rds"))
+saveRDS(fastqs_derep_R, file = file.path(outdir, "fastqs_derep_R.rds"))
+
+rm(fastqs_derep_F, fastqs_derep_R) # Remove objects from environment
+```
+
+# Generate summary table
+```{r}
+# Create the sequence table
+seqtab_all <- makeSequenceTable(mergers)
+# Check the dimensions of the sequence table
+dim(seqtab_all)
+# Check the ASV sequence lengths
+table(nchar(getSequences(seqtab_all)))
+```
+
+# Remove chimera
+```{r}
+# Identify and remove chimeras
+seqtab <- removeBimeraDenovo(seqtab_all,
+                             method = "consensus",
+                             multithread = n_cores,
+                             verbose = TRUE)
+# Proportion of retained sequences:
+sum(seqtab) / sum(seqtab_all)
+# Save the sequence table
+saveRDS(seqtab, file = file.path(outdir, "seqtab.rds"))
+```
+
+# Generate a summary table
+```{r}
+# Get the numbers of unique reads at each step
+getN <- function(x) sum(getUniques(x))
+
+denoised_F <- sapply(dada_Fs, getN)
+denoised_R <- sapply(dada_Rs, getN)
+merged <- sapply(mergers, getN)
+# Create a summary table
+nreads_summary <- data.frame(filter_results,
+                             denoised_F,
+                             denoised_R,
+                             merged,
+                             nonchim = rowSums(seqtab),
+                             row.names = c("504A0", "504A14", "504B0", "504B14"))
+colnames(nreads_summary)[1:2] <- c("input", "filtered")
+```
+
+```{r}
+# Write the summary table to file
+write.table(nreads_summary,
+            file = file.path(outdir, "nreads_summary.txt"),
+            sep = "\t", quote = FALSE, row.names = TRUE)
+```
+
+
+
+**Considerations for your own data: This is a great place to do a last sanity check**. 
+Outside of filtering, there should no step in which a majority of reads are lost. If a majority of reads failed to merge, you may need to revisit the truncLen parameter used in the filtering step and make sure that the truncated reads span your amplicon. If a majority of reads were removed as chimeric, you may need to revisit the removal of primers, as the ambiguous nucleotides in unremoved primers interfere with chimera identification.**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
