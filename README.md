@@ -1,7 +1,7 @@
 # 16s rRNA analysis of Jillian
 
 ## This repo contains code used to perform the metabarcoding analysis of the project
-Whole wheat bread improves postprandial glucose tolerance in adults with prediabetes: a controlled-feeding randomized crossover trial with microbiome-associated variation in response <https://www.frontiersin.org/journals/nutrition/articles/10.3389/fnut.2026.1907908/full>
+**Whole wheat bread improves postprandial glucose tolerance in adults with prediabetes: a controlled-feeding randomized crossover trial with microbiome-associated variation in response** <https://www.frontiersin.org/journals/nutrition/articles/10.3389/fnut.2026.1907908/full>
 
 ## Moved old analysis to single folder old folder
 ```bash
