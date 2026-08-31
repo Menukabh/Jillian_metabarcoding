@@ -28,6 +28,4 @@ sbatch scripts/mutiqc.sh results/multiqc results/fastqc
 sbatch scripts/cutadapt.sh
 ```
 
-## They had issues of primers, so check if they are present after trimming primers with cutadapt
-
 
